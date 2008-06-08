@@ -6,7 +6,7 @@ require 'page'
   require_gem_with_feedback gem
 end
 
-GIT_REPO = ENV['HOME'] + '/wiki'
+GIT_REPO = ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki')
 HOMEPAGE = 'home'
 
 unless File.exists?(GIT_REPO) && File.directory?(GIT_REPO)
