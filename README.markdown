@@ -8,7 +8,6 @@ A wiki engine that uses Git repository as its data store and sinatra as its web 
 - git
 - grit
 - bluecloth
-- rubypants
 
 ## Required software ##
 
