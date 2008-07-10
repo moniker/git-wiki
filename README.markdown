@@ -5,9 +5,15 @@ A wiki engine that uses Git repository as its data store and sinatra as its web 
 ## Required gems ##
 
 - sinatra
+- git
 - grit
 - bluecloth
 - rubypants
+
+## Required software ##
+
+- git
+
 
 ## Getting started ##
 
