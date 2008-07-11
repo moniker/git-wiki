@@ -97,7 +97,7 @@ class Page
   # save a file into the _attachments directory
   def save_file(file, name = '')
     if name.size > 0
-      filename = name.wiki_filename + File.extname(file[:filename])
+      filename = name.wiki_filename + File.extname(file[:filename]).downcase
     else
       filename = file[:filename]
     end
