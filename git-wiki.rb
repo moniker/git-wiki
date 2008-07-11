@@ -10,7 +10,7 @@ get('/') { redirect "/#{HOMEPAGE}" }
 
 get '/:page' do
   @page = Page.new(params[:page])
-  @page.tracked? ? show(:show, @page.name) : redirect('/e/' + @page.name)
+  @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.name)
 end
 
 get '/:page/raw' do
@@ -26,7 +26,7 @@ end
 
 get '/e/:page' do
   @page = Page.new(params[:page])
-  show :edit, "Editing #{@page.name}"
+  show :edit, "Editing #{@page.title}"
 end
 
 post '/e/:page' do
@@ -43,17 +43,17 @@ end
 
 get '/h/:page' do
   @page = Page.new(params[:page])
-  show :history, "History of #{@page.name}"
+  show :history, "History of #{@page.title}"
 end
 
 get '/h/:page/:rev' do
   @page = Page.new(params[:page], params[:rev])
-  show :show, "#{@page.name} (version #{params[:rev]})"
+  show :show, "#{@page.title} (version #{params[:rev]})"
 end
 
 get '/d/:page/:rev' do
   @page = Page.new(params[:page])
-  show :delta, "Diff of #{@page.name}"
+  show :delta, "Diff of #{@page.title}"
 end
 
 # application paths (/a/ namespace)
@@ -145,7 +145,7 @@ end
 
 get '/a/file/upload/:page' do
   @page = Page.new(params[:page])
-  show :attach, 'Attach File for ' + @page.name
+  show :attach, 'Attach File for ' + @page.title
 end
 
 post '/a/file/upload/:page' do

@@ -8,12 +8,25 @@ end
 
 class String
   def wiki_linked
-    self.gsub!(/\b((?:[A-Z]\w+){2,})/) { |m| "<a href=\"/#{m}\">#{m}</a>" }
-    self.gsub!(/\[(\w+){2,}\]/) { |m| 
-      m.gsub!(/(\[|\])/, '')
-      "<a href=\"/#{m}\">#{m}</a>" 
-    }
+    self.gsub!(  /([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/  ) do |page| # simple WikiWords
+      %{<a href="/#{page}">#{page}</a>}
+    end
+
+    self.gsub!(  /\[\[[^\]]+\]\]/  ) do |page| # simple [[any words between double brackets]]
+      innerstr = page[2..-3] # remove outer two brackets
+      %{<a href="/#{innerstr.wiki_filename}">#{innerstr}</a>}
+    end
     self
+  end
+
+  # convert to a filename (substitute _ for spaces)
+  def wiki_filename
+    self.gsub( ' ', '_' )
+  end
+
+  # unconvert filename into title (substitute spaces for _)
+  def unwiki_filename
+    self.gsub( '_', ' ' )
   end
 end
 

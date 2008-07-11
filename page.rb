@@ -12,6 +12,10 @@ class Page
     string.downcase
   end
 
+  def title
+    @name.unwiki_filename
+  end
+
   def body
     @body ||= BlueCloth.new(raw_body).to_html.wiki_linked
   end
