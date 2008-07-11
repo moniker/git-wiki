@@ -97,7 +97,7 @@ class Page
   # save a file into the _attachments directory
   def save_file(file, name = '')
     if name.size > 0
-      filename = name + File.extname(file[:filename])
+      filename = name.wiki_filename + File.extname(file[:filename])
     else
       filename = file[:filename]
     end
@@ -162,7 +162,7 @@ class Page
 
     def image?
       ext = File.extname(@path)
-      case ext
+      case ext.downcase
       when '.png', '.jpg', '.jpeg', '.gif'; return true
       else; return false
       end
