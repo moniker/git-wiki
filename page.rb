@@ -1,11 +1,12 @@
 class Page
-  attr_reader :name, :attach_dir
+  attr_reader :name, :basename, :attach_dir
 
-  def initialize(name, rev=nil)
-    @name = name
+  def initialize(basename, rev=nil)
+    @basename = basename
+    @name = basename+PAGE_FILE_EXT
     @rev = rev
     @filename = File.join(GIT_REPO, @name)
-    @attach_dir = File.join(GIT_REPO, '_attachments', unwiki(@name))
+    @attach_dir = File.join(GIT_REPO, '_attachments', unwiki(@basename))
   end
 
   def unwiki(string)
@@ -13,7 +14,7 @@ class Page
   end
 
   def title
-    @name.unwiki_filename
+    @basename.unwiki_filename
   end
 
   def body
@@ -38,7 +39,7 @@ class Page
 
   def update(content, message=nil)
     File.open(@filename, 'w') { |f| f << content }
-    commit_message = tracked? ? "edited #{@name}" : "created #{@name}"
+    commit_message = tracked? ? "edited #{@basename}" : "created #{@basename}"
     commit_message += ' : ' + message if message && message.length > 0
     begin
       $repo.add(@name)
@@ -108,7 +109,7 @@ class Page
     f.write(file[:tempfile].read)
     f.close
 
-    commit_message = "uploaded #{filename} for #{@name}"
+    commit_message = "uploaded #{filename} for #{@basename}"
     begin
       $repo.add(new_file)
       $repo.commit(commit_message)
@@ -122,7 +123,7 @@ class Page
     if File.exists?(file_path)
       File.unlink(file_path)
 
-      commit_message = "removed #{file} for #{@name}"
+      commit_message = "removed #{file} for #{@basename}"
       begin
         $repo.remove(file_path)
         $repo.commit(commit_message)
@@ -135,7 +136,7 @@ class Page
 
   def attachments
     if File.exists?(@attach_dir)
-      return Dir.glob(File.join(@attach_dir, '*')).map { |f| Attachment.new(f, unwiki(@name)) }
+      return Dir.glob(File.join(@attach_dir, '*')).map { |f| Attachment.new(f, unwiki(@basename)) }
     else
       false
     end

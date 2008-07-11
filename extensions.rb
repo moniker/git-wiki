@@ -15,7 +15,7 @@ class String
 
     self.gsub!(  /\[\[([A-Za-z0-9_ -])+\]\]/  ) do |page_wbrackets| # simple [[any words between double brackets]]
       page = page_wbrackets[2..-3] # remove outer two brackets
-      class_not_found = (Page.new(page).tracked?) ? "" : %{class="notfound"}
+      class_not_found = (Page.new(page.wiki_filename).tracked?) ? "" : %{class="notfound"}
       %{<a #{class_not_found} href="/#{page.wiki_filename}">#{page}</a>}
     end
     self
@@ -29,6 +29,11 @@ class String
   # unconvert filename into title (substitute spaces for _)
   def unwiki_filename
     self.gsub( '_', ' ' )
+  end
+
+  # strip the extension PAGE_FILE_EXT
+  def strip_extension
+    File.basename(self, PAGE_FILE_EXT)
   end
 end
 

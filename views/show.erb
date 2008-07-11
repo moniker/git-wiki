@@ -1,13 +1,13 @@
 <script type="text/javascript">
   $(document).ready(function() {
-    $(".edit_area").editable('/eip/<%= @page.name %>', {
+    $(".edit_area").editable('/eip/<%= @page.basename %>', {
       indicator: "saving...",
       tooltip: 'double-click to edit...',
       cancel: 'cancel',
       submit: 'save',
       event: 'dblclick',
       cssclass: 'edit',
-      loadurl: '/<%= @page.name %>/raw',
+      loadurl: '/<%= @page.basename %>/raw',
       type: 'textarea',
       name: 'body'
     });
@@ -20,19 +20,19 @@
 
 <div class="sub_nav">
   <% if params[:rev] %>
-    <a href="/<%= @page.name %>" class="nav_link">current</a> &bull;
+    <a href="/<%= @page.basename %>" class="nav_link">current</a> &bull;
   <% else %>
-    <a href="/e/<%= @page.name %>" class="nav_link">edit</a> &bull;
+    <a href="/e/<%= @page.basename %>" class="nav_link">edit</a> &bull;
   <% end %>
 
-  <a href="/h/<%= @page.name %>" class="nav_link">history</a>
+  <a href="/h/<%= @page.basename %>" class="nav_link">history</a>
 
   <% if @page.previous_commit %>
-    &bull; <a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a>
+    &bull; <a href="/h/<%= @page.basename %>/<%= @page.previous_commit %>" class="nav_link">older</a>
   <% end %>
 
   <% if @page.next_commit %>
-    &bull; <a href="/h/<%= @page.name %>/<%= @page.next_commit %>" class="nav_link">newer</a>
+    &bull; <a href="/h/<%= @page.basename %>/<%= @page.next_commit %>" class="nav_link">newer</a>
   <% end %>
 
   <div class="sub_nav details">

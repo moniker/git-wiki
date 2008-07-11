@@ -8,6 +8,7 @@ end
 
 GIT_REPO = ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki')
 HOMEPAGE = 'home'
+PAGE_FILE_EXT = ".markdown"
 
 unless File.exists?(GIT_REPO) && File.directory?(GIT_REPO)
   puts "Initializing repository in #{GIT_REPO}..."

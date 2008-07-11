@@ -10,7 +10,7 @@ get('/') { redirect "/#{HOMEPAGE}" }
 
 get '/:page' do
   @page = Page.new(params[:page])
-  @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.name)
+  @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.basename)
 end
 
 get '/:page/raw' do
@@ -21,7 +21,7 @@ end
 get '/:page/append' do
   @page = Page.new(params[:page])
   @page.body = @page.raw_body + "\n\n" + params[:text]
-  redirect '/' + @page.name
+  redirect '/' + @page.basename
 end
 
 get '/e/:page' do
@@ -32,7 +32,7 @@ end
 post '/e/:page' do
   @page = Page.new(params[:page])
   @page.update(params[:body], params[:message])
-  redirect '/' + @page.name
+  redirect '/' + @page.basename
 end
 
 post '/eip/:page' do
@@ -60,7 +60,7 @@ end
 
 get '/a/list' do
   pages = $repo.log.first.gtree.children
-  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name) } rescue []
+  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name.strip_extension) } rescue []
   show(:list, 'Listing pages')
 end
 
@@ -151,13 +151,13 @@ end
 post '/a/file/upload/:page' do
   @page = Page.new(params[:page])
   @page.save_file(params[:file], params[:name])
-  redirect '/e/' + @page.name
+  redirect '/e/' + @page.basename
 end
 
 get '/a/file/delete/:page/:file.:ext' do
   @page = Page.new(params[:page])
   @page.delete_file(params[:file] + '.' + params[:ext])
-  redirect '/e/' + @page.name
+  redirect '/e/' + @page.basename
 end
 
 get '/_attachment/:page/:file.:ext' do

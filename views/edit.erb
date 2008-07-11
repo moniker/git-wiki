@@ -1,11 +1,11 @@
 <h1>Editing <a href="/<%= @page.name %>"><%= @page.title %></a></h1>
 
 <div class="sub_nav">
-  <a href="/<%= @page.name %>" class="nav_link">back</a>
-  &bull; <a href="/a/file/upload/<%= @page.name %>" class="nav_link">attach</a>
+  <a href="/<%= @page.basename %>" class="nav_link">back</a>
+  &bull; <a href="/a/file/upload/<%= @page.basename %>" class="nav_link">attach</a>
 
   <% if @page.tracked? %>
-    &bull; <a href="/h/<%= @page.name %>" class="nav_link">history</a>
+    &bull; <a href="/h/<%= @page.basename %>" class="nav_link">history</a>
   <% end %>
 
   <% if files = @page.attachments %>
@@ -16,11 +16,7 @@
         <div class="attach-options">
           <a href="<%= file.delete_path %>">delete</a>
           &bull; <a href="<%= file.link_path %>">download</a>
-          <% if file.image? %>
-          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '\n![<%= file.link_path %>](<%= file.link_path %>)');">insert &#187;</a>
-          <% else %>
-          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '\n[<%= file.name %>](<%= file.link_path %>)');">insert &#187;</a>
-          <% end %>
+          &bull; <a href="#" onClick="insert_link('<%= file.name.unwiki_filename %>', '<%= file.link_path %>', <%= (file.image?) ? true : false %> )"; return false">insert &#187;</a>
         </div>
       </span>
     <% end %>
@@ -28,10 +24,20 @@
 </div>
 
 <div class="content">
-  <form method="post" action="/e/<%= @page.name %>">
+  <form method="post" action="/e/<%= @page.basename %>">
     <textarea name="body" id="edit_textarea"><%= @page.raw_body %></textarea>
     Message:
     <textarea name="message" rows="4" id="message_textarea"></textarea>
     <p class="right"><input type="submit" value="Save" class="submit" /></p>
   </form>
 </div>
+
+<script type="text/javascript">
+  function insert_link(name, url, image){
+    if(image){
+      $("#edit_textarea").html($("#edit_textarea").html() + "\n!["+name+"]("+url+")");
+    }else{
+      $("#edit_textarea").html($("#edit_textarea").html() + "\n["+name+"]("+url+")");
+    }
+  }
+</script>
