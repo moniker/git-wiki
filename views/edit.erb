@@ -17,9 +17,9 @@
           <a href="<%= file.delete_path %>">delete</a>
           &bull; <a href="<%= file.link_path %>">download</a>
           <% if file.image? %>
-          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '!<%= file.link_path %>!');">insert &#187;</a>
+          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '\n![<%= file.link_path %>](<%= file.link_path %>)');">insert &#187;</a>
           <% else %>
-          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '[<%= file.name %>](<%= file.link_path %>)');">insert &#187;</a>
+          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '\n[<%= file.name %>](<%= file.link_path %>)');">insert &#187;</a>
           <% end %>
         </div>
       </span>
