@@ -9,12 +9,14 @@ end
 class String
   def wiki_linked
     self.gsub!(  /([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/  ) do |page| # simple WikiWords
-      %{<a href="/#{page}">#{page}</a>}
+      class_not_found = (Page.new(page).tracked?) ? "" : %{class="notfound"}
+      %{<a #{class_not_found} href="/#{page}">#{page}</a>}
     end
 
-    self.gsub!(  /\[\[[^\]]+\]\]/  ) do |page| # simple [[any words between double brackets]]
-      innerstr = page[2..-3] # remove outer two brackets
-      %{<a href="/#{innerstr.wiki_filename}">#{innerstr}</a>}
+    self.gsub!(  /\[\[[^\]]+\]\]/  ) do |page_wbrackets| # simple [[any words between double brackets]]
+      page = page_wbrackets[2..-3] # remove outer two brackets
+      class_not_found = (Page.new(page).tracked?) ? "" : %{class="notfound"}
+      %{<a #{class_not_found} href="/#{page.wiki_filename}">#{page}</a>}
     end
     self
   end
