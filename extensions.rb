@@ -13,7 +13,7 @@ class String
       %{<a #{class_not_found} href="/#{page}">#{page}</a>}
     end
 
-    self.gsub!(  /\[\[[^\]]+\]\]/  ) do |page_wbrackets| # simple [[any words between double brackets]]
+    self.gsub!(  /\[\[([A-Za-z0-9_ -])+\]\]/  ) do |page_wbrackets| # simple [[any words between double brackets]]
       page = page_wbrackets[2..-3] # remove outer two brackets
       class_not_found = (Page.new(page).tracked?) ? "" : %{class="notfound"}
       %{<a #{class_not_found} href="/#{page.wiki_filename}">#{page}</a>}
@@ -21,9 +21,9 @@ class String
     self
   end
 
-  # convert to a filename (substitute _ for spaces)
+  # convert to a filename (substitute _ for any whitespace)
   def wiki_filename
-    self.gsub( ' ', '_' )
+    self.gsub( /\s/, '_' )
   end
 
   # unconvert filename into title (substitute spaces for _)
