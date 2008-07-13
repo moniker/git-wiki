@@ -61,7 +61,7 @@ class Page
   end
 
   def delta(rev)
-    $repo.diff(previous_commit, rev).path(@name).patch
+    $repo.diff(commit, rev).path(@name).patch
   end
 
   def commit
