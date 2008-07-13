@@ -98,10 +98,12 @@ class Page
   # save a file into the _attachments directory
   def save_file(file, name = '')
     if name.size > 0
-      filename = name.wiki_filename + File.extname(file[:filename]).downcase
+      filename = name + File.extname(file[:filename]).downcase
     else
       filename = file[:filename]
     end
+    filename = filename.wiki_filename # convert to wiki friendly name
+
     FileUtils.mkdir_p(@attach_dir) if !File.exists?(@attach_dir)
     new_file = File.join(@attach_dir, filename)
 
