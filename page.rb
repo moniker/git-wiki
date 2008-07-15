@@ -6,7 +6,7 @@ class Page
     @name = basename+PAGE_FILE_EXT
     @rev = rev
     @filename = File.join(GIT_REPO, @name)
-    @attach_dir = File.join(GIT_REPO, '_attachments', unwiki(@basename))
+    @attach_dir = File.join(GIT_REPO, "_"+unwiki(@basename)) # /wiki/_page
   end
 
   def unwiki(string)
@@ -156,7 +156,7 @@ class Page
     end
 
     def link_path
-      File.join('/_attachment', @page_name, name)
+      File.join('/_'+@page_name, name)
     end
 
     def delete_path

@@ -60,7 +60,8 @@ end
 
 get '/a/list' do
   pages = $repo.log.first.gtree.children
-  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name.strip_extension) } rescue []
+  # only listing pages and stripping page_extension from url
+  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name.strip_page_extension) } rescue []
   show(:list, 'Listing pages')
 end
 
@@ -160,7 +161,7 @@ get '/a/file/delete/:page/:file.:ext' do
   redirect '/e/' + @page.basename
 end
 
-get '/_attachment/:page/:file.:ext' do
+get '/_:page/:file.:ext' do
   @page = Page.new(params[:page])
   send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
 end

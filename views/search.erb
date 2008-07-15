@@ -19,7 +19,12 @@
           <div class="match">
             <tt><%= match %></tt>
             <br />
-            &mdash; <a href="/<%= file.strip_extension %>"><%= file.strip_extension %></a>, line <%= line %> (<%= $repo.object(sha).name %>)
+            &mdash; <a href="/<%= file.strip_page_extension %>"><%= file.strip_page_extension %></a>, line <%= line %> (<%= $repo.object(sha).name %>)
+
+            <br/>
+            <%= file %>
+
+
           </div>
         <% end %>
     </div>

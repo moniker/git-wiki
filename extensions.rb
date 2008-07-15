@@ -31,9 +31,21 @@ class String
     self.gsub( '_', ' ' )
   end
 
-  # strip the extension PAGE_FILE_EXT
-  def strip_extension
-    File.basename(self, PAGE_FILE_EXT)
+  def starts_with?(str)
+    str = str.to_str
+    head = self[0, str.length]
+    head == str
+  end
+
+  def ends_with?(str)
+    str = str.to_str
+    tail = self[-str.length, str.length]
+    tail == str
+  end
+
+  # strip the extension PAGE_FILE_EXT if ends with PAGE_FILE_EXT
+  def strip_page_extension
+    (self.ends_with?(PAGE_FILE_EXT)) ? self[0...-PAGE_FILE_EXT.size] : self
   end
 end
 
