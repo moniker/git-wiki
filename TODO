@@ -9,7 +9,7 @@
   * multiple wikis using subdirectories
   * allow separate users, log user name
   * add color to style, fix for small pages
-
+  * case insensitive search
 
 = CHACON IDEAS
   * tagging
