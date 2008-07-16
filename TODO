@@ -4,8 +4,12 @@
   * pushing repo from web interface
 
 = JEFFBSKI IDEAS
-  * fix js attach insert so no extension for name
-  * search link does not bring up attachment, adjust URL
+  * fix js attach insert to insert at cursor
+  * js attach insert to use reference style markdown links
+  * multiple wikis using subdirectories
+  * allow separate users, log user name
+  * add color to style, fix for small pages
+  * case insensitive search
 
 
 = CHACON IDEAS
