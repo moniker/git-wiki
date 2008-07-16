@@ -13,6 +13,7 @@ get '/:page' do
   @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.basename)
 end
 
+
 get '/:page/raw' do
   @page = Page.new(params[:page])
   @page.raw_body
@@ -165,6 +166,25 @@ get '/_:page/:file.:ext' do
   @page = Page.new(params[:page])
   send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
 end
+
+# allow subdirectories, needs to go last since using wild card
+=begin
+
+get '/e/*' do
+  file = request.env["REQUEST_PATH"][3..-1] # strip off leading /e/
+  @page = Page.new(file)
+  show :edit, "Editing #{@page.title}"
+end
+
+
+# get page
+get '/*' do
+  file = request.env["REQUEST_PATH"][1..-1] # strip off leading /
+  @page = Page.new(file)
+  @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.basename)
+end
+
+=end
 
 # support methods
 
