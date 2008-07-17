@@ -201,7 +201,7 @@ class Page
     end
 
     def delete_path
-      File.join('/a/file/delete', @page_name, name)
+      File.join('/a/file/delete', "#{@page_name}#{ATTACH_DIR_SUFFIX}", name) # /a/file/delete/foo/bar_files/file.jpg
     end
 
     def image?
