@@ -5,7 +5,11 @@ require 'environment'
 require 'sinatra'
 
 # allow subdirectories for page, override the default regex, uses sinatra mod
-OPTS_RE = { :param_regex => { :page => '.*?', :rev => '[a-f0-9]{40}' }} unless defined?(OPTS_RE)
+OPTS_RE = { :param_regex => {
+    :page => '.*?', # wildcard foo/bar
+    :page_files => ".*?#{ATTACH_DIR_SUFFIX}",  # foo/bar_files
+    :rev => '[a-f0-9]{40}' }  # 40 char guid
+} unless defined?(OPTS_RE)
 
 get('/') { redirect "/#{HOMEPAGE}" }
 
@@ -172,14 +176,15 @@ post '/a/file/upload/:page', OPTS_RE do
   redirect '/e/' + @page.basename
 end
 
-get '/a/file/delete/:page/:file.:ext', OPTS_RE do
-  @page = Page.new(params[:page])
+get '/a/file/delete/:page_files/:file.:ext', OPTS_RE do
+  @page = Page.new(Page.calc_page_from_attach_dir(params[:page_files]))
   @page.delete_file(params[:file] + '.' + params[:ext])
   redirect '/e/' + @page.basename
 end
 
-get '/_:page/:file.:ext', OPTS_RE do
-  @page = Page.new(params[:page])
+get "/:page_files/:file.:ext", OPTS_RE do
+  page_base = Page.calc_page_from_attach_dir(params[:page_files])
+  @page = Page.new(page_base)
   send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
 end
 

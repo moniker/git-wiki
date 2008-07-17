@@ -6,7 +6,7 @@ class Page
     @name = basename+PAGE_FILE_EXT
     @rev = rev
     @filename = verify_file_under_repo(File.join(GIT_REPO, @name))
-    @attach_dir = File.join(GIT_REPO, ATTACH_DIR_PREFIX+unwiki(@basename)) # /wiki/_page
+    @attach_dir = calc_attach_dir(@basename)
   end
 
   def unwiki(string)
@@ -107,6 +107,15 @@ class Page
     filepath
   end
 
+  # calculate attachment dir, foo => /wiki/foo_files, foo/bar => /wiki/foo/bar_files
+  def calc_attach_dir(page_base)
+    page_full_path = File.join(GIT_REPO, unwiki(page_base)+ATTACH_DIR_SUFFIX)
+  end
+
+  # calculate the pagename from the attachment dir, foo_files => foo, foo/bar_files => foo/bar
+  def self.calc_page_from_attach_dir(attach_dir)
+    attach_dir[0...-ATTACH_DIR_SUFFIX.size] # return without suffix
+  end
 
   # return a hash of file, blobs (pass true for recursive to drill down into subdirs)
   def self.list(git_tree, recursive, dirname=nil)
@@ -188,7 +197,7 @@ class Page
     end
 
     def link_path
-      File.join("/#{ATTACH_DIR_PREFIX}#{@page_name}", name) # /_foo/file.jpg
+      File.join("/#{@page_name}#{ATTACH_DIR_SUFFIX}", name) # /foo/bar_files/file.jpg
     end
 
     def delete_path
