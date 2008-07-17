@@ -201,6 +201,8 @@ def page_url(page)
   "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}/#{page}"
 end
 
+
+
 private
 
   def show(template, title)
@@ -217,3 +219,4 @@ private
       $repo.add('.meta')
     end
   end
+

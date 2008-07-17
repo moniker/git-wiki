@@ -6,7 +6,6 @@
 = JEFFBSKI IDEAS
   * fix js attach insert so no extension for name
   * search link does not bring up attachment, adjust URL
-  * prevent subdirectories from going out of base, expand name and verify
 
 
 = CHACON IDEAS

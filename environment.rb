@@ -6,7 +6,7 @@ require 'page'
   require_gem_with_feedback gem
 end
 
-GIT_REPO = ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki')
+GIT_REPO = File.expand_path( ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki') )
 HOMEPAGE = 'index'
 PAGE_FILE_EXT = ".markdown"
 ATTACH_DIR_PREFIX = "_"

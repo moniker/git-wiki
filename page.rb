@@ -5,7 +5,7 @@ class Page
     @basename = basename
     @name = basename+PAGE_FILE_EXT
     @rev = rev
-    @filename = File.join(GIT_REPO, @name)
+    @filename = verify_file_under_repo(File.join(GIT_REPO, @name))
     @attach_dir = File.join(GIT_REPO, ATTACH_DIR_PREFIX+unwiki(@basename)) # /wiki/_page
   end
 
@@ -97,6 +97,17 @@ class Page
     @blob ||= ($repo.gblob(@rev + ':' + @name))
   end
 
+  # throws error if the expanded filepath is not under the repos,
+  # prevent people from trying to get out of sandbox using .. or other (~)
+  # Requires that GIT_REPO is expanded
+  def verify_file_under_repo(filepath)
+    unless File.expand_path(filepath).starts_with?(GIT_REPO)
+      raise "Invalid path=#{filepath}, must be under git-wiki repository"
+    end
+    filepath
+  end
+
+
   # return a hash of file, blobs (pass true for recursive to drill down into subdirs)
   def self.list(git_tree, recursive, dirname=nil)
     file_blobs = {}
@@ -125,9 +136,9 @@ class Page
     end
     filename = filename.wiki_filename # convert to wiki friendly name
 
-    FileUtils.mkdir_p(@attach_dir) if !File.exists?(@attach_dir)
-    new_file = File.join(@attach_dir, filename)
+    new_file = verify_file_under_repo(File.join(@attach_dir, filename))
 
+    FileUtils.mkdir_p(@attach_dir) if !File.exists?(@attach_dir)
     f = File.new(new_file, 'w')
     f.write(file[:tempfile].read)
     f.close
@@ -142,7 +153,7 @@ class Page
   end
 
   def delete_file(file)
-    file_path = File.join(@attach_dir, file)
+    file_path = verify_file_under_repo(File.join(@attach_dir, file))
     if File.exists?(file_path)
       File.unlink(file_path)
 
