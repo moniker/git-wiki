@@ -47,6 +47,11 @@ class String
   def strip_page_extension
     (self.ends_with?(PAGE_FILE_EXT)) ? self[0...-PAGE_FILE_EXT.size] : self
   end
+
+  # true if string is an attachment dir or file _foo/bar.jpg, _foo, foo/_bar/file.jpg
+  def attach_dir_or_file?
+    /(^_|\/_)/ =~ self
+  end
 end
 
 class Time

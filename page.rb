@@ -1,12 +1,12 @@
 class Page
-  attr_reader :name, :basename, :attach_dir
+  attr_reader :name, :basename, :filename, :attach_dir
 
   def initialize(basename, rev=nil)
     @basename = basename
     @name = basename+PAGE_FILE_EXT
     @rev = rev
     @filename = File.join(GIT_REPO, @name)
-    @attach_dir = File.join(GIT_REPO, "_"+unwiki(@basename)) # /wiki/_page
+    @attach_dir = File.join(GIT_REPO, ATTACH_DIR_PREFIX+unwiki(@basename)) # /wiki/_page
   end
 
   def unwiki(string)
@@ -38,6 +38,8 @@ class Page
   end
 
   def update(content, message=nil)
+    dirname = File.dirname(@filename)
+    FileUtils.mkdir_p(dirname) if(!File.exist?(dirname)) # create subdirectory if needed
     File.open(@filename, 'w') { |f| f << content }
     commit_message = tracked? ? "edited #{@basename}" : "created #{@basename}"
     commit_message += ' : ' + message if message && message.length > 0
@@ -93,6 +95,25 @@ class Page
 
   def blob
     @blob ||= ($repo.gblob(@rev + ':' + @name))
+  end
+
+  # return a hash of file, blobs (pass true for recursive to drill down into subdirs)
+  def self.list(git_tree, recursive, dirname=nil)
+    file_blobs = {}
+    git_tree.children.each do |file, blob|
+      unless dirname.nil? || dirname.empty? # prepend dirname if any
+        file = File.join(dirname, file)
+      end
+      file_blobs[file] = blob
+    end
+    if recursive
+      file_blobs.each do |file, blob|
+        if blob.tree?
+          file_blobs.merge!( self.list(blob, true, file) )
+        end
+      end
+    end
+    file_blobs
   end
 
   # save a file into the _attachments directory
@@ -156,7 +177,7 @@ class Page
     end
 
     def link_path
-      File.join('/_'+@page_name, name)
+      File.join("/#{ATTACH_DIR_PREFIX}#{@page_name}", name) # /_foo/file.jpg
     end
 
     def delete_path

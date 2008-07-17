@@ -7,8 +7,9 @@ require 'page'
 end
 
 GIT_REPO = ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki')
-HOMEPAGE = 'home'
+HOMEPAGE = 'index'
 PAGE_FILE_EXT = ".markdown"
+ATTACH_DIR_PREFIX = "_"
 
 unless File.exists?(GIT_REPO) && File.directory?(GIT_REPO)
   puts "Initializing repository in #{GIT_REPO}..."

@@ -4,69 +4,85 @@ require 'fileutils'
 require 'environment'
 require 'sinatra'
 
+# allow subdirectories for page, override the default regex, uses sinatra mod
+OPTS_RE = { :param_regex => { :page => '.*?', :rev => '[a-f0-9]{40}' }} unless defined?(OPTS_RE)
+
 get('/') { redirect "/#{HOMEPAGE}" }
 
 # page paths
 
-get '/:page' do
-  @page = Page.new(params[:page])
-  @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.basename)
-end
-
-
-get '/:page/raw' do
+get '/:page/raw', OPTS_RE do
   @page = Page.new(params[:page])
   @page.raw_body
 end
 
-get '/:page/append' do
+get '/:page/append', OPTS_RE do
   @page = Page.new(params[:page])
   @page.body = @page.raw_body + "\n\n" + params[:text]
   redirect '/' + @page.basename
 end
 
-get '/e/:page' do
+get '/e/:page', OPTS_RE do
   @page = Page.new(params[:page])
   show :edit, "Editing #{@page.title}"
 end
 
-post '/e/:page' do
+post '/e/:page', OPTS_RE do
   @page = Page.new(params[:page])
   @page.update(params[:body], params[:message])
   redirect '/' + @page.basename
 end
 
-post '/eip/:page' do
+post '/eip/:page', OPTS_RE do
   @page = Page.new(params[:page])
   @page.update(params[:body])
   @page.body
 end
 
-get '/h/:page' do
-  @page = Page.new(params[:page])
-  show :history, "History of #{@page.title}"
-end
-
-get '/h/:page/:rev' do
+get '/h/:page/:rev', OPTS_RE do
   @page = Page.new(params[:page], params[:rev])
   show :show, "#{@page.title} (version #{params[:rev]})"
 end
 
-get '/d/:page/:rev' do
+get '/h/:page', OPTS_RE do
+  @page = Page.new(params[:page])
+  show :history, "History of #{@page.title}"
+end
+
+get '/d/:page/:rev', OPTS_RE do
   @page = Page.new(params[:page])
   show :delta, "Diff of #{@page.title}"
 end
 
 # application paths (/a/ namespace)
 
+# list only top level, no recurse, exclude dirs
 get '/a/list' do
-  pages = $repo.log.first.gtree.children
+  pages = Page.list($repo.log.first.gtree, false) # recurse
   # only listing pages and stripping page_extension from url
-  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name.strip_page_extension) } rescue []
+  @pages = pages.select { |f,bl| !f.attach_dir_or_file? && !bl.tree? }.sort.map { |name, blob| Page.new(name.strip_page_extension) } rescue []
   show(:list, 'Listing pages')
 end
 
-get '/a/patch/:page/:rev' do
+
+# recursive list from root, exlude dirs
+get '/a/list/all' do
+  pages = Page.list($repo.log.first.gtree, true) # recurse
+  # only listing pages and stripping page_extension from url
+  @pages = pages.select { |f,bl| !f.attach_dir_or_file? && !bl.tree? }.sort.map { |name, blob| Page.new(name.strip_page_extension) } rescue []
+  show(:list, 'Listing pages')
+end
+
+# list only pages in a subdirectory, not recursive, exclude dirs
+get '/a/list/:page', OPTS_RE do
+  page_dir = params[:page]
+  pages = Page.list($repo.log.first.gtree, true) # recurse
+  # only listing pages and stripping page_extension from url
+  @pages = pages.select { |f,bl| !f.attach_dir_or_file? && !bl.tree? && File.dirname(f)==page_dir }.sort.map { |name, blob| Page.new(name.strip_page_extension) } rescue []
+  show(:list, 'Listing pages')
+end
+
+get '/a/patch/:page/:rev', OPTS_RE do
   @page = Page.new(params[:page])
   header 'Content-Type' => 'text/x-diff'
   header 'Content-Disposition' => 'filename=patch.diff'
@@ -145,46 +161,39 @@ end
 
 # file upload attachments
 
-get '/a/file/upload/:page' do
+get '/a/file/upload/:page', OPTS_RE do
   @page = Page.new(params[:page])
   show :attach, 'Attach File for ' + @page.title
 end
 
-post '/a/file/upload/:page' do
+post '/a/file/upload/:page', OPTS_RE do
   @page = Page.new(params[:page])
   @page.save_file(params[:file], params[:name])
   redirect '/e/' + @page.basename
 end
 
-get '/a/file/delete/:page/:file.:ext' do
+get '/a/file/delete/:page/:file.:ext', OPTS_RE do
   @page = Page.new(params[:page])
   @page.delete_file(params[:file] + '.' + params[:ext])
   redirect '/e/' + @page.basename
 end
 
-get '/_:page/:file.:ext' do
+get '/_:page/:file.:ext', OPTS_RE do
   @page = Page.new(params[:page])
   send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
 end
 
-# allow subdirectories, needs to go last since using wild card
-=begin
-
-get '/e/*' do
-  file = request.env["REQUEST_PATH"][3..-1] # strip off leading /e/
-  @page = Page.new(file)
-  show :edit, "Editing #{@page.title}"
+# least specific wildcards (:page) need to go last
+get '/:page', OPTS_RE do
+  @page = Page.new(params[:page])
+  if @page.tracked?
+    show(:show, @page.title)
+  else
+    @page = Page.new(File.join(params[:page], HOMEPAGE)) if File.directory?(@page.filename.strip_page_extension) # use index page if dir
+    redirect('/e/' + @page.basename)
+  end
 end
 
-
-# get page
-get '/*' do
-  file = request.env["REQUEST_PATH"][1..-1] # strip off leading /
-  @page = Page.new(file)
-  @page.tracked? ? show(:show, @page.title) : redirect('/e/' + @page.basename)
-end
-
-=end
 
 # support methods
 
