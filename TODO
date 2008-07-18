@@ -12,6 +12,7 @@
   * DONE better css, which doesn't break as easy on long names
   * DONE move back to sinatra submodule to pull my changes
   * add person name who changed, use cookie to remember
+  * don't lose contents when adding attachments
 
 = CHACON IDEAS
   * tagging
