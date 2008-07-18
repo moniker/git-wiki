@@ -9,7 +9,7 @@ end
 class String
   # convert to a filename (substitute _ for any whitespace, discard anything but word chars, underscores, dots, and dashes, slashes
   def wiki_filename
-    self.gsub( /\s+/, '_' ).gsub('.', '-').gsub( /[^A-Za-z0-9_\/-]/ , '')
+    self.gsub( /\s+/, '_' ).gsub( /[^A-Za-z0-9\._\/-]/ , '')
   end
 
   # unconvert filename into title (substitute spaces for _)
