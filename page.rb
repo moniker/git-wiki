@@ -1,5 +1,5 @@
 class Page
-  attr_reader :name, :basename, :filename, :attach_dir
+  attr_reader :name, :basename, :filename, :attach_dir, :subwiki
 
   def initialize(basename, rev=nil)
     @basename = basename
@@ -7,6 +7,7 @@ class Page
     @rev = rev
     @filename = verify_file_under_repo(File.join(GIT_REPO, @name))
     @attach_dir = calc_attach_dir(@basename)
+    @subwiki = (/\// =~ @basename) ? File.dirname(@basename) : nil # foo/bar/baz => foo/bar
   end
 
   def unwiki(string)
@@ -17,8 +18,13 @@ class Page
     @basename.unwiki_filename
   end
 
+  def html_link(wiki_page_title)
+    class_not_found = (self.tracked?) ? "" : %{class="notfound"}
+    %{<a #{class_not_found} href="/#{self.basename}">#{wiki_page_title}</a>}
+  end
+
   def body
-    @body ||= BlueCloth.new(raw_body).to_html.wiki_linked
+    @body ||= wiki_linked(BlueCloth.new(raw_body).to_html)
   end
 
   def branch_name
@@ -90,7 +96,7 @@ class Page
 
   def version(rev)
     data = blob.contents
-    BlueCloth.new(data).to_html.wiki_linked
+    wiki_linked(BlueCloth.new(data).to_html)
   end
 
   def blob
@@ -184,6 +190,35 @@ class Page
       false
     end
   end
+
+  def wiki_linked(text)
+    # disable automatic WikiWord, force use of [[ ]] for consistency and less false matches
+    #text.gsub!(  /([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/  ) do |wiki_word| # simple WikiWords
+    #  page, wiki_page_title = calc_page_and_title_from_wikiword(wiki_word)
+    #  page.html_link(wiki_page_title)
+    #end
+
+    text.gsub!(  /\[\[([A-Za-z0-9_ :-])+\]\]/  ) do |wikiword_wbrackets| # [[any words between double brackets]]
+      wiki_word = wikiword_wbrackets[2..-3] # remove outer two brackets
+      page, wiki_page_title = calc_page_and_title_from_wikiword(wiki_word)
+      page.html_link(wiki_page_title)
+    end
+    text
+  end
+
+  # returns page_name, wiki_page_title from wiki_word, adjust for abs/rel path wiki words (foo: bar) or (:abs)
+  def calc_page_and_title_from_wikiword(wiki_word)
+    wiki_page_title = wiki_word # as is for now
+    page_name = wiki_word.gsub( /\s*:\s*/, '/')
+    if self.subwiki && !page_name.starts_with?('/') # unless page starts with /, remain in subwiki, so prefix with dir
+      page_name = File.join(self.subwiki, page_name)
+    end
+    page_name = page_name[1..-1] if page_name.starts_with?('/')
+    page_name = page_name.wiki_filename
+    page = Page.new(page_name)
+    return page, wiki_page_title
+  end
+
 
   class Attachment
     attr_accessor :path, :page_name
