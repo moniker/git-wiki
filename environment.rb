@@ -6,9 +6,10 @@ require 'page'
   require_gem_with_feedback gem
 end
 
-GIT_REPO = ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki')
-HOMEPAGE = 'home'
+GIT_REPO = File.expand_path( ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki') )
+HOMEPAGE = 'index'
 PAGE_FILE_EXT = ".markdown"
+ATTACH_DIR_SUFFIX = "_files"
 
 unless File.exists?(GIT_REPO) && File.directory?(GIT_REPO)
   puts "Initializing repository in #{GIT_REPO}..."

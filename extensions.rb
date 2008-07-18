@@ -7,23 +7,9 @@ def require_gem_with_feedback(gem)
 end
 
 class String
-  def wiki_linked
-    self.gsub!(  /([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/  ) do |page| # simple WikiWords
-      class_not_found = (Page.new(page).tracked?) ? "" : %{class="notfound"}
-      %{<a #{class_not_found} href="/#{page}">#{page}</a>}
-    end
-
-    self.gsub!(  /\[\[([A-Za-z0-9_ -])+\]\]/  ) do |page_wbrackets| # simple [[any words between double brackets]]
-      page = page_wbrackets[2..-3] # remove outer two brackets
-      class_not_found = (Page.new(page.wiki_filename).tracked?) ? "" : %{class="notfound"}
-      %{<a #{class_not_found} href="/#{page.wiki_filename}">#{page}</a>}
-    end
-    self
-  end
-
-  # convert to a filename (substitute _ for any whitespace, discard anything but word chars, underscores, dots, and dashes
+  # convert to a filename (substitute _ for any whitespace, discard anything but word chars, underscores, dots, and dashes, slashes
   def wiki_filename
-    self.gsub( /\s/, '_' ).gsub( /[^A-Za-z0-9_.-]/ , '')
+    self.gsub( /\s+/, '_' ).gsub( /[^A-Za-z0-9\._\/-]/ , '')
   end
 
   # unconvert filename into title (substitute spaces for _)
@@ -46,6 +32,11 @@ class String
   # strip the extension PAGE_FILE_EXT if ends with PAGE_FILE_EXT
   def strip_page_extension
     (self.ends_with?(PAGE_FILE_EXT)) ? self[0...-PAGE_FILE_EXT.size] : self
+  end
+
+  # true if string is an attachment dir or file foo_files/bar.jpg, _foo, foo/bar_files/file.jpg
+  def attach_dir_or_file?
+    /#{ATTACH_DIR_SUFFIX}\// =~ self
   end
 end
 
