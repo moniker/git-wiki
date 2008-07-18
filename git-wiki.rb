@@ -159,7 +159,7 @@ end
 
 get '/a/search' do
   @search = params[:search]
-  @grep = $repo.grep(@search)
+  @grep = $repo.object('HEAD').grep(@search, nil, { :ignore_case => true })
   show :search, 'Search Results'
 end
 
