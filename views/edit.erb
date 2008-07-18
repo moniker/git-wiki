@@ -16,7 +16,7 @@
         <div class="attach-options">
           <a href="<%= file.delete_path %>">delete</a>
           &bull; <a href="<%= file.link_path %>">download</a>
-          &bull; <a href="#" onClick="insert_link('<%= file.name.unwiki_filename %>', '<%= file.link_path %>', <%= (file.image?) ? true : false %> )"; return false">insert &#187;</a>
+          &bull; <a href="#" class="replace" name="<%= file.name.unwiki_filename %>" url="<%= file.link_path %>" image="<%= (file.image?) ? true : false %>">insert &#187;</a>
         </div>
       </span>
     <% end %>
@@ -33,11 +33,24 @@
 </div>
 
 <script type="text/javascript">
-  function insert_link(name, url, image){
-    if(image){
-      $("#edit_textarea").html($("#edit_textarea").html() + "\n!["+name+"]("+url+")");
+  $(document).ready(function(){
+
+    // assign the a.replace paste events
+    $('a.replace').click(function(e) {
+      var link = calc_link($(this).attr('name'), $(this).attr('url'), $(this).attr('image'));
+      $("#edit_textarea").replaceSelection(link, true);
+      $.each($("#edit_textarea"), update);
+      e.preventDefault();
+      return false;
+    });
+
+  });
+
+  function calc_link(name, url, image){
+    if(image=="true"){
+      return "!["+name+"]("+url+")";
     }else{
-      $("#edit_textarea").html($("#edit_textarea").html() + "\n["+name+"]("+url+")");
+      return "["+name+"]("+url+")";
     }
   }
 </script>
