@@ -2,7 +2,7 @@
 
 require 'fileutils'
 require 'environment'
-require 'sinatra'
+require 'sinatra/lib/sinatra' # using submodule
 
 # allow subdirectories for page, override the default regex, uses sinatra mod
 OPTS_RE = { :param_regex => {
