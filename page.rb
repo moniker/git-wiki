@@ -209,7 +209,7 @@ class Page
   # returns page_name, wiki_page_title from wiki_word, adjust for abs/rel path wiki words (foo: bar) or (:abs)
   def calc_page_and_title_from_wikiword(wiki_word)
     wiki_page_title = wiki_word # as is for now
-    page_name = wiki_word.gsub( /\s*:\s*/, '/')
+    page_name = wiki_word.gsub( /\s*:\s*/, '/').downcase
     if self.subwiki && !page_name.starts_with?('/') # unless page starts with /, remain in subwiki, so prefix with dir
       page_name = File.join(self.subwiki, page_name)
     end
