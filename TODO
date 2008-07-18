@@ -4,7 +4,11 @@
   * pushing repo from web interface
 
 = JEFFBSKI IDEAS
-  * fix js attach insert so no extension for name
+  * fix js attach insert add at cursor using reference, actual ref at
+  * better css, which doesn't break as easy on long names
+  * move back to sinatra submodule to pull my changes
+  * refactor my changes for sinatra
+  * add person name who changed, use cookie to remember
 
 
 = CHACON IDEAS
