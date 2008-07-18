@@ -198,7 +198,7 @@ class Page
     #  page.html_link(wiki_page_title)
     #end
 
-    text.gsub!(  /\[\[([A-Za-z0-9_ :-])+\]\]/  ) do |wikiword_wbrackets| # [[any words between double brackets]]
+    text.gsub!(  /\[\[([A-Za-z0-9\.\/_ :-]+)\]\]/  ) do |wikiword_wbrackets| # [[any words between double brackets]]
       wiki_word = wikiword_wbrackets[2..-3] # remove outer two brackets
       page, wiki_page_title = calc_page_and_title_from_wikiword(wiki_word)
       page.html_link(wiki_page_title)
@@ -214,6 +214,7 @@ class Page
       page_name = File.join(self.subwiki, page_name)
     end
     page_name = page_name[1..-1] if page_name.starts_with?('/')
+    page_name = page_name + HOMEPAGE if page_name.ends_with?('/')
     page_name = page_name.wiki_filename
     page = Page.new(page_name)
     return page, wiki_page_title
