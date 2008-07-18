@@ -6,8 +6,8 @@ require 'sinatra'
 
 # allow subdirectories for page, override the default regex, uses sinatra mod
 OPTS_RE = { :param_regex => {
-    :page => '.*?', # wildcard foo/bar
-    :page_files => ".*?#{ATTACH_DIR_SUFFIX}",  # foo/bar_files
+    :page => '.+', # wildcard foo/bar
+    :page_files => ".+#{ATTACH_DIR_SUFFIX}",  # foo/bar_files
     :rev => '[a-f0-9]{40}' }  # 40 char guid
 } unless defined?(OPTS_RE)
 
