@@ -145,11 +145,13 @@ class Page
   # save a file into the _attachments directory
   def save_file(file, name = '')
     if name.size > 0
-      filename = name + File.extname(file[:filename]).downcase
+      filename = name + File.extname(file[:filename])
     else
       filename = file[:filename]
     end
     filename = filename.wiki_filename # convert to wiki friendly name
+    ext = File.extname(filename)
+    filename = File.basename(filename, ext).gsub('.','-')+ext.downcase #remove periods from basename, messes up route matching
 
     new_file = verify_file_under_repo(File.join(@attach_dir, filename))
 
