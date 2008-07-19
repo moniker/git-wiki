@@ -12,16 +12,18 @@
 
   <% if files = @page.attachments %>
     <h3>Attachments</h3>
+    <div id="attachments">
     <% files.each do |file| %>
-      <li><a href="<%= file.link_path %>"><%= file.name %></a>
+      <div class="attachment_item"><a href="<%= file.link_path %>"><%= file.name %></a>
         <span class="detail">(<%= file.size %>)</span>
         <div class="attach-options">
-          <a href="<%= file.delete_path %>">delete</a>
+          <a class="delete_attachment" href="<%= file.delete_path %>" aname="<%= file.name %>">delete</a>
           &bull; <a href="<%= file.link_path %>">download</a>
           &bull; <a href="#" class="replace" name="<%= file.name.unwiki_filename %>" url="<%= file.link_path %>" image="<%= (file.image?) ? true : false %>">insert &#187;</a>
         </div>
-      </span>
+      </div>
     <% end %>
+    </div>
   <% end %>
 </div>
 
@@ -61,6 +63,20 @@
         });
       }
     });
+
+    //delete attachment link onclick posts to delete file, then hides item
+    $("a.delete_attachment").click(function(e){
+      var a = $(this);
+      var name = a.attr('aname');
+      var url = a.attr('href');
+        if(confirm("Delete "+name)){
+        $.post(url, null, function(data, textStatus){
+          a.parent("div.attach-options").parent("div.attachment_item").hide("slow");
+        });
+      }
+      return false;
+    });
+
 
   });
 

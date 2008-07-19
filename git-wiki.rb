@@ -182,10 +182,11 @@ post '/a/file/upload/:page', OPTS_RE do
   redirect '/e/' + @page.basename
 end
 
-get '/a/file/delete/:page_files/:file.:ext', OPTS_RE do
+post '/a/file/delete/:page_files/:file.:ext', OPTS_RE do
   @page = Page.new(Page.calc_page_from_attach_dir(params[:page_files]))
-  @page.delete_file(params[:file] + '.' + params[:ext])
-  redirect '/e/' + @page.basename
+  filename = params[:file] + '.' + params[:ext]
+  @page.delete_file(filename)
+  "Deleted #{filename}"
 end
 
 get "/:page_files/:file.:ext", OPTS_RE do
