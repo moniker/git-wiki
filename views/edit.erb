@@ -37,8 +37,13 @@
 
     // assign the a.replace paste events
     $('a.replace').click(function(e) {
-      var link = calc_link($(this).attr('name'), $(this).attr('url'), $(this).attr('image'));
+      var name = $(this).attr('name');
+      var url = $(this).attr('url');
+      var isImage = $(this).attr('image');
+      var link = calc_link(name, url, isImage);
+      var ref = calc_link_ref(name, url, isImage);
       $("#edit_textarea").replaceSelection(link, true);
+      $("#edit_textarea").val($("#edit_textarea").val()+"\n"+ ref);
       $.each($("#edit_textarea"), update);
       e.preventDefault();
       return false;
@@ -48,9 +53,13 @@
 
   function calc_link(name, url, image){
     if(image=="true"){
-      return "!["+name+"]("+url+")";
+      return "!["+name+"][]";
     }else{
-      return "["+name+"]("+url+")";
+      return "["+name+"][]";
     }
+  }
+
+  function calc_link_ref(name, url, image){
+    return "[" + name + "]: " + url;
   }
 </script>

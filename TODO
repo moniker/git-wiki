@@ -4,8 +4,9 @@
   * pushing repo from web interface
 
 = JEFFBSKI IDEAS
-  * fix js attach insert to insert at cursor
-  * js attach insert to use reference style markdown links
+  * DONE fix js attach insert to insert at cursor
+  * DONE js attach insert to use reference style markdown links
+  * possible to reset cursor position after insert link/image?
   * DONE multiple wikis using subdirectories
   * add color to style
   * DONE case insensitive search
