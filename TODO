@@ -13,7 +13,12 @@
   * DONE better css, which doesn't break as easy on long names
   * DONE move back to sinatra submodule to pull my changes
   * add person name who changed, use cookie to remember
-  * don't lose contents when adding attachments
+  * don't lose contents when adding attachments, ajax multi file upload?
+  * DONE delete page and attachments
+  * DONE delete attachment with ajax post inline update
+  * optional markdown helper
+  * switch to maruku
+
 
 = CHACON IDEAS
   * tagging
