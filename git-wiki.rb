@@ -43,6 +43,12 @@ post '/eip/:page', OPTS_RE do
   @page.body
 end
 
+post '/delete/:page', OPTS_RE do
+  @page = Page.new(params[:page])
+  @page.delete
+  "Deleted #{@page.basename}"
+end
+
 get '/h/:page/:rev', OPTS_RE do
   @page = Page.new(params[:page], params[:rev])
   show :show, "#{@page.title} (version #{params[:rev]})"

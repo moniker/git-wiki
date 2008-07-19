@@ -8,6 +8,8 @@
     &bull; <a href="/h/<%= @page.basename %>" class="nav_link">history</a>
   <% end %>
 
+  &bull; <a id="delete_link" href="#" class="nav_link">delete</a>
+
   <% if files = @page.attachments %>
     <h3>Attachments</h3>
     <% files.each do |file| %>
@@ -47,6 +49,17 @@
       $.each($("#edit_textarea"), update);
       e.preventDefault();
       return false;
+    });
+
+    //delete_link onclick posts a delete of page
+    $("#delete_link").click(function(e){
+      if(confirm("Delete <%= @page.basename %>")){
+        $.post("/delete/<%= @page.basename %>", null, function(data, textStatus){
+          $("#messages").text(data).fadeIn(4000, function(){
+            document.location = "/"; //redirect to top
+          });
+        });
+      }
     });
 
   });

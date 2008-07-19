@@ -59,6 +59,27 @@ class Page
     @body
   end
 
+  def delete
+    if File.exists?(@filename)
+      File.unlink(@filename)
+      attach_dir_exists = File.exist?(verify_file_under_repo(@attach_dir))
+
+      if attach_dir_exists
+        attachments.each { |a| File.unlink(a.path) }
+        Dir.rmdir(@attach_dir)
+      end
+
+      commit_message = "removed #{@basename}"
+      begin
+        $repo.remove(@filename)
+        $repo.remove(@attach_dir, { :recursive => true }) if attach_dir_exists
+        $repo.commit(commit_message)
+      rescue
+        nil
+      end
+    end
+  end
+
   def tracked?
     $repo.ls_files.keys.include?(@name)
   end
