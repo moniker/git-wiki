@@ -7,6 +7,14 @@
     <script language="javascript" type="text/javascript" src="/jquery.min.js"></script>
     <script language="javascript" type="text/javascript" src="/jeditable.min.js"></script>
     <script language="javascript" type="text/javascript" src="/jquery-fieldselection.js"></script>
+
+    <% if @layout_options.include?(:markitup) %>
+      <script type="text/javascript" src="/markitup/jquery.markitup.pack.js"></script>
+      <script type="text/javascript" src="/markitup/sets/markdown/set.js"></script>
+      <link rel="stylesheet" type="text/css" href="/markitup/skins/markitup/style.css" media="screen"/>
+      <link rel="stylesheet" type="text/css" href="/markitup/sets/markdown/style.css" media="screen"/>
+    <% end %>
+
   </head>
   <body>
     <div id="container">

@@ -28,10 +28,22 @@
 </div>
 
 <div class="content">
+  <div id="editor-choices">
+    <a id="editor-none" href="#" class="hide">Hide Markdown toolbar</a>
+    <a id="editor-markdown" href="#">Show Markdown toolbar</a>
+    |
+    <a id="markdown-quickref-show" href="#">Show Markdown Quickref</a>
+    <a id="markdown-quickref-hide" href="#" class="hide">Hide Markdown Quickref</a>
+  </div>
+  <div id="markdown-quickref" class="hide">
+    # h1, ## h2, ### h3, _italic_, **bold**, - list, 1. olist, 4spaces code, [[wiki link]], [link](url), ![alt](imageURL)<br/>
+    <a href="http://daringfireball.net/projects/markdown/syntax" target="MarkdownDaringFireball">Full Markdown syntax</a>
+  </div>
   <form method="post" action="/e/<%= @page.basename %>">
     <textarea name="body" id="edit_textarea"><%= @page.raw_body %></textarea>
     Message:
     <textarea name="message" rows="4" id="message_textarea"></textarea>
+    <input type="hidden" name="content_type" value="markdown"/>
     <p class="right"><input type="submit" value="Save" class="submit" /></p>
   </form>
 </div>
@@ -74,6 +86,39 @@
           a.parent("div.attach-options").parent("div.attachment_item").hide("slow");
         });
       }
+      return false;
+    });
+
+
+    //editor-selection
+
+    $("#editor-none").click(function(e){
+      $("#edit_textarea").markItUpRemove();
+      $(this).hide();
+      $("#editor-markdown").show();
+      return false;
+    });
+
+    $("#editor-markdown").click(function(e){
+      $("#edit_textarea").markItUp(markItUpMarkdownSettings);
+      $(this).hide();
+      $("#editor-none").show();
+      return false;
+    });
+
+    //markdown quickref toggle
+
+    $("#markdown-quickref-show").click(function(e){
+      $("#markdown-quickref").show();
+      $(this).hide();
+      $("#markdown-quickref-hide").show();
+      return false;
+    });
+
+    $("#markdown-quickref-hide").click(function(e){
+      $("#markdown-quickref").hide();
+      $(this).hide();
+      $("#markdown-quickref-show").show();
       return false;
     });
 

@@ -28,7 +28,7 @@ end
 
 get '/e/:page', OPTS_RE do
   @page = Page.new(params[:page])
-  show :edit, "Editing #{@page.title}"
+  show :edit, "Editing #{@page.title}", { :markitup => true }
 end
 
 post '/e/:page', OPTS_RE do
@@ -217,8 +217,9 @@ end
 
 private
 
-  def show(template, title)
+  def show(template, title, layout_options={})
     @title = title
+    @layout_options = layout_options
     erb(template)
   end
 

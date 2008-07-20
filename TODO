@@ -9,6 +9,7 @@
   * possible to reset cursor position after insert link/image?
   * DONE multiple wikis using subdirectories
   * add color to style
+  * spruce up pre code style
   * DONE case insensitive search
   * DONE better css, which doesn't break as easy on long names
   * DONE move back to sinatra submodule to pull my changes
@@ -16,7 +17,8 @@
   * don't lose contents when adding attachments, ajax multi file upload?
   * DONE delete page and attachments
   * DONE delete attachment with ajax post inline update
-  * optional markdown helper
+  * DONE markdown quickref and full syntax link
+  * DONE markitup editor
   * switch to maruku
 
 
