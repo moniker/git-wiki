@@ -17,6 +17,14 @@ A wiki engine that uses Git repository as its data store and sinatra as its web 
 ## Getting started ##
 
     export WIKI_HOME=~/mywiki # governs where wiki is stored, defaults ~/wiki
+    cd git-wiki
+    git submodule init
+    git submodule update
+
+    cd ./sinatra; 
+    git submodule init
+    git submodule update
+    cd ..
 
     ruby git-wiki.rb
 
