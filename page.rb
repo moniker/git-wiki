@@ -217,7 +217,7 @@ class Page
   private
 
   EXT_WIKI_WORD_REGEX = /\[\[([A-Za-z0-9\.\/_ :-]+)\]\]/ unless defined?(EXT_WIKI_WORD_REGEX)
-  ESCAPE_FOR_MARUKU = /[^a-zA-Z0-9\s\n\.]/
+  ESCAPE_FOR_MARUKU = /[^a-zA-Z0-9\s\n\.\/]/
 
   # maruku needs double brackets, colons and other things escaped (prepend \)
   def escape_wiki_link(text)
