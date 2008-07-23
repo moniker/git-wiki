@@ -26,6 +26,17 @@ get '/:page/append', OPTS_RE do
   redirect '/' + @page.basename
 end
 
+# preview post
+post '/e/preview', OPTS_RE do
+  @page = Page.new(HOMEPAGE)
+  @page.preview(params["markdown"])
+end
+
+post '/e/:page/preview', OPTS_RE do
+  @page = Page.new(params[:page]+"/#{HOMEPAGE}") # put us in the right dir for wiki words
+  @page.preview(params["markdown"])
+end
+
 get '/e/:page', OPTS_RE do
   @page = Page.new(params[:page])
   show :edit, "Editing #{@page.title}", { :markitup => true }
@@ -188,6 +199,10 @@ post '/a/file/delete/:page_files/:file.:ext', OPTS_RE do
   @page.delete_file(filename)
   "Deleted #{filename}"
 end
+
+
+
+
 
 get "/:page_files/:file.:ext", OPTS_RE do
   page_base = Page.calc_page_from_attach_dir(params[:page_files])

@@ -11,7 +11,9 @@
 // Feel free to add more tags
 // -------------------------------------------------------------------
 markItUpMarkdownSettings = {
-        previewParserPath:      '',
+        previewParserPath:      './preview',
+        previewParserVar:       'markdown',
+        previewInWindow: 'width=1024, height=768, resizable=yes, scrollbars=yes',
         onShiftEnter:           {keepDefault:false, openWith:'\n\n'},
         markupSet: [
                 {name:'First Level Heading', key:'1', placeHolder:'Your title here...', closeWith:function(markItUp) { return miu.markdownTitle(markItUp, '=') } },
@@ -34,11 +36,8 @@ markItUpMarkdownSettings = {
                 {separator:'---------------'},
                 {name:'Quotes', openWith:'> '},
                 {name:'Code Block / Code', openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
-
-                /*
                 {separator:'---------------'},
                 {name:'Preview', call:'preview', className:"preview"}
-                */
         ]
 }
 

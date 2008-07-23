@@ -24,7 +24,7 @@ class Page
   end
 
   def body
-    @body ||= wiki_linked(Maruku.new(escape_wiki_link(raw_body)).to_html)
+    @body ||= convert_markdown_to_html(raw_body)
   end
 
   def branch_name
@@ -117,7 +117,7 @@ class Page
 
   def version(rev)
     data = blob.contents
-    wiki_linked(Maruku.new(escape_wiki_link(data)).to_html)
+    convert_markdown_to_html(data)
   end
 
   def blob
@@ -214,7 +214,11 @@ class Page
     end
   end
 
-  private
+  def preview(markdown)
+    convert_markdown_to_html(markdown)
+  end
+
+
 
   EXT_WIKI_WORD_REGEX = /\[\[([A-Za-z0-9\.\/_ :-]+)\]\]/ unless defined?(EXT_WIKI_WORD_REGEX)
   ESCAPE_FOR_MARUKU = /[^a-zA-Z0-9\s\n\.\/]/
@@ -253,6 +257,10 @@ class Page
     page_name = page_name.wiki_filename
     page = Page.new(page_name)
     return page, wiki_page_title
+  end
+
+  def convert_markdown_to_html(markdown)
+    wiki_linked(Maruku.new(escape_wiki_link(markdown)).to_html)
   end
 
 
