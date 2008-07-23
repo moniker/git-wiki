@@ -24,7 +24,7 @@ class Page
   end
 
   def body
-    @body ||= wiki_linked(BlueCloth.new(raw_body).to_html)
+    @body ||= wiki_linked(Maruku.new(escape_wiki_link(raw_body)).to_html)
   end
 
   def branch_name
@@ -117,7 +117,7 @@ class Page
 
   def version(rev)
     data = blob.contents
-    wiki_linked(BlueCloth.new(data).to_html)
+    wiki_linked(Maruku.new(escape_wiki_link(data)).to_html)
   end
 
   def blob
@@ -214,6 +214,18 @@ class Page
     end
   end
 
+  private
+
+  EXT_WIKI_WORD_REGEX = /\[\[([A-Za-z0-9\.\/_ :-]+)\]\]/ unless defined?(EXT_WIKI_WORD_REGEX)
+  ESCAPE_FOR_MARUKU = /[^a-zA-Z0-9\s\n\.]/
+
+  # maruku needs double brackets, colons and other things escaped (prepend \)
+  def escape_wiki_link(text)
+    text.gsub( EXT_WIKI_WORD_REGEX ) do |wikiword_wbrackets|
+      wikiword_wbrackets.gsub( ESCAPE_FOR_MARUKU ) { |w| '\\'+w }
+    end
+  end
+
   def wiki_linked(text)
     # disable automatic WikiWord, force use of [[ ]] for consistency and less false matches
     #text.gsub!(  /([A-Z][a-z]+[A-Z][A-Za-z0-9]+)/  ) do |wiki_word| # simple WikiWords
@@ -221,7 +233,7 @@ class Page
     #  page.html_link(wiki_page_title)
     #end
 
-    text.gsub!(  /\[\[([A-Za-z0-9\.\/_ :-]+)\]\]/  ) do |wikiword_wbrackets| # [[any words between double brackets]]
+    text.gsub!( EXT_WIKI_WORD_REGEX ) do |wikiword_wbrackets| # [[any words between double brackets]]
       wiki_word = wikiword_wbrackets[2..-3] # remove outer two brackets
       page, wiki_page_title = calc_page_and_title_from_wikiword(wiki_word)
       page.html_link(wiki_page_title)

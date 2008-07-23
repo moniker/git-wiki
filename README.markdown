@@ -7,7 +7,7 @@ A wiki engine that uses Git repository as its data store and sinatra as its web 
 - sinatra
 - git
 - grit
-- bluecloth
+- maruku
 
 ## Required software ##
 
@@ -21,7 +21,7 @@ A wiki engine that uses Git repository as its data store and sinatra as its web 
     git submodule init
     git submodule update
 
-    cd ./sinatra; 
+    cd ./sinatra;
     git submodule init
     git submodule update
     cd ..
