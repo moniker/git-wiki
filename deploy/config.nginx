@@ -1,0 +1,37 @@
+upstream dev-wiki {
+        server unix:/var/www/dev-wiki/git-wiki/log/thin.0.sock;        
+	server unix:/var/www/dev-wiki/git-wiki/log/thin.1.sock;        
+	server unix:/var/www/dev-wiki/git-wiki/log/thin.2.sock;
+}
+
+server {
+            listen   80;
+            server_name rtpdev1 rtpdev1.rgare.net;
+
+            access_log /var/www/dev-wiki/git-wiki/log/access.log;
+            error_log /var/www/dev-wiki/git-wiki/log/error.log;
+
+            root   /var/www/dev-wiki/content/;
+            index  index.html;
+
+            location / {
+                          proxy_set_header  X-Real-IP  $remote_addr;
+                          proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+                          proxy_set_header Host $http_host;
+                          proxy_redirect false;
+
+                          if (-f $request_filename/index.html) {
+                                           rewrite (.*) $1/index.html break;
+                          }
+
+                          if (-f $request_filename.html) {
+                                           rewrite (.*) $1.html break;
+                          }
+
+                          if (!-f $request_filename) {
+                                           proxy_pass http://dev-wiki;
+                                           break;
+                          }
+            }
+
+}

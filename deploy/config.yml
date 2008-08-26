@@ -1,0 +1,14 @@
+--- 
+rackup: /var/www/dev-wiki/config.ru
+pid: /var/www/dev-wiki/git-wiki/log/thin.pid
+socket: /var/www/dev-wiki/git-wiki/log/thin.sock
+log: /var/www/dev-wiki/git-wiki/log/thin.log
+max_conns: 1024
+timeout: 120
+max_persistent_conns: 512
+chdir: /var/www/dev-wiki/git-wiki
+environment: production
+servers: 3
+daemonize: true
+user: dev-wiki
+group: nogroup
