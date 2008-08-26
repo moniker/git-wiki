@@ -11,11 +11,11 @@
   <% @history.each do |commit| %>
     <li>
       <% if commit != @history.first %>
-        <a href="/a/revert_branch/<%= commit.sha %>" title="Click to revert to this revision." onclick="return confirm('Are you sure you want to revert to this revision?');">
+        <!-- <a href="/a/revert_branch/<%= commit.sha %>" title="Click to revert to this revision." onclick="return confirm('Are you sure you want to revert to this revision?');"> -->
           <script type="text/javascript">
           document.write(time_ago_in_words(<%= commit.date.for_time_ago_in_words %>) + ' ago');
           </script>
-        </a>
+        <!-- </a> -->
       <% else %>
         <script type="text/javascript">
         document.write(time_ago_in_words(<%= commit.date.for_time_ago_in_words %>) + ' ago');
