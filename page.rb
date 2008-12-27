@@ -283,6 +283,10 @@ class Page
       File.join('/a/file/delete', "#{@page_name}#{ATTACH_DIR_SUFFIX}", name) # /a/file/delete/foo/bar_files/file.jpg
     end
 
+    def replace_path
+      File.join('/a/file/replace', "#{@page_name}#{ATTACH_DIR_SUFFIX}", name) # /a/file/replace/foo/bar_files/file.jpg
+    end
+
     def image?
       ext = File.extname(@path)
       case ext.downcase

@@ -18,6 +18,7 @@
         <span class="detail">(<%= file.size %>)</span>
         <div class="attach-options">
           <a class="delete_attachment" href="<%= file.delete_path %>" aname="<%= file.name %>">delete</a>
+          &bull; <a class="replace_attachment" href="<%= file.replace_path %>" aname="<%= file.name %>">replace</a>
           &bull; <a href="<%= file.link_path %>">download</a>
           &bull; <a href="#" class="replace" name="<%= file.name.unwiki_filename %>" url="<%= file.link_path %>" image="<%= (file.image?) ? true : false %>">insert &#187;</a>
         </div>

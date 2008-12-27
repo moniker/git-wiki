@@ -187,6 +187,13 @@ get '/a/file/upload/:page', OPTS_RE do
   show :attach, 'Attach File for ' + @page.title
 end
 
+get '/a/file/replace/:page_files/:file.:ext', OPTS_RE do # show replace file upload page
+  @page = Page.new(Page.calc_page_from_attach_dir(params[:page_files]))
+  filename = params[:file] + '.' + params[:ext]
+  @name = params[:file] # we want to use the same name when replacing
+  show :replace, 'Replace File for ' + @page.title
+end
+
 post '/a/file/upload/:page', OPTS_RE do
   @page = Page.new(params[:page])
   @page.save_file(params[:file], params[:name])
