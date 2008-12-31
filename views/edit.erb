@@ -69,7 +69,7 @@
     //delete_link onclick posts a delete of page
     $("#delete_link").click(function(e){
       if(confirm("Delete <%= @page.basename %>")){
-        $.post("/delete/<%= @page.basename %>", null, function(data, textStatus){
+        $.post("/delete/<%= @page.basename %>", "", function(data, textStatus){
           $("#messages").text(data).fadeIn(4000, function(){
             document.location = "/"; //redirect to top
           });
@@ -83,7 +83,7 @@
       var name = a.attr('aname');
       var url = a.attr('href');
         if(confirm("Delete "+name)){
-        $.post(url, null, function(data, textStatus){
+        $.post(url, "", function(data, textStatus){
           a.parent("div.attach-options").parent("div.attachment_item").hide("slow");
         });
       }
