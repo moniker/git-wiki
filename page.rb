@@ -154,7 +154,7 @@ class Page
       file_blobs[file] = blob
     end
     if recursive
-      file_blobs.each do |file, blob|
+      file_blobs.clone.each do |file, blob|
         if blob.tree?
           file_blobs.merge!( self.list(blob, true, file) )
         end
