@@ -21,6 +21,7 @@
   * DONE markitup editor
   * DONE switch to maruku
   * DONE setup preview
+  * Clean up page list eliminating non-markdown pages or at least removing edit and history links
 
 
 = CHACON IDEAS
