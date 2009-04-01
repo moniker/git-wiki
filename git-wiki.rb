@@ -8,7 +8,8 @@ require 'sinatra/lib/sinatra' # using submodule
 OPTS_RE = { :param_regex => {
     :page => '.+', # wildcard foo/bar
     :page_files => ".+#{ATTACH_DIR_SUFFIX}",  # foo/bar_files
-    :rev => '[a-f0-9]{40}' }  # 40 char guid
+    :rev => '[a-f0-9]{40}',  # 40 char guid
+    :known_ext => "(gif|jpg|png|pdf|xls|doc)" } # known extensions for binaries
 } unless defined?(OPTS_RE)
 
 get('/') { redirect "/#{HOMEPAGE}" }
@@ -208,8 +209,11 @@ post '/a/file/delete/:page_files/:file.:ext', OPTS_RE do
 end
 
 
-
-#get "/"
+# check if binary file by known extensions
+get "/:page/:file.:known_ext", OPTS_RE do
+  @page = Page.new(params[:page])
+  send_file(File.join(@page.dir, params[:file] + '.' + params[:known_ext]))
+end
 
 get "/:page_files/:file.:ext", OPTS_RE do
   page_base = Page.calc_page_from_attach_dir(params[:page_files])
@@ -222,14 +226,23 @@ get '/:page', OPTS_RE do
   @page = Page.new(params[:page])
   if @page.tracked?
     show(:show, @page.title)
-  else # try the page plus index
-    page_plus_index = Page.new(concat_homepage(params[:page]))
-    if page_plus_index.tracked?
-      @page = page_plus_index
-      show(:show, @page.title)
-    else # editing new page
-      @page = Page.new(File.join(params[:page], HOMEPAGE)) if File.directory?(@page.filename.strip_page_extension) # use index page if dir
-      redirect('/e/' + @page.basename)
+  else # try the page without the .html extension
+    page_name = params[:page]
+    if page_name.ends_with?(HTML_EXT)
+      page_no_html_ext = Page.new(page_name[0..-(HTML_EXT.length+1)])
+      if page_no_html_ext.tracked?
+        @page = page_no_html_ext
+        show(:show, @page.title)
+      end
+    else # try the page plus index
+      page_plus_index = Page.new(concat_homepage(params[:page]))
+      if page_plus_index.tracked?
+        @page = page_plus_index
+        show(:show, @page.title)
+      else # editing new page
+        @page = Page.new(File.join(params[:page], HOMEPAGE)) if File.directory?(@page.filename.strip_page_extension) # use index page if dir
+        redirect('/e/' + @page.basename)
+      end
     end
   end
 end

@@ -139,6 +139,15 @@ class Page
     page_full_path = File.join(GIT_REPO, unwiki(page_base)+ATTACH_DIR_SUFFIX)
   end
 
+  # calculate directory (no attach dir suffix)
+  def calc_dir(page_base)
+    page_full_path = File.join(GIT_REPO, unwiki(page_base))
+  end
+
+  def dir
+    calc_dir(@basename)
+  end
+
   # calculate the pagename from the attachment dir, foo_files => foo, foo/bar_files => foo/bar
   def self.calc_page_from_attach_dir(attach_dir)
     attach_dir[0...-ATTACH_DIR_SUFFIX.size] # return without suffix
