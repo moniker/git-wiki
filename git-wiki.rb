@@ -209,7 +209,7 @@ end
 
 
 
-
+#get "/"
 
 get "/:page_files/:file.:ext", OPTS_RE do
   page_base = Page.calc_page_from_attach_dir(params[:page_files])
@@ -263,5 +263,5 @@ private
 
   def concat_homepage(name)
     # concat the homepage to the name ex. foo becomes foo/index foo/ becomes foo/index
-    (name.ends_with?('/')) ? name+HOMEPAGE : name+'/'+HOMEPAGE
+    File.join(name, HOMEPAGE)
   end
