@@ -144,6 +144,7 @@ class Page
     page_full_path = File.join(GIT_REPO, unwiki(page_base))
   end
 
+  # return directory for this based on the basename foo/bar => /wiki/foo/bar
   def dir
     calc_dir(@basename)
   end
