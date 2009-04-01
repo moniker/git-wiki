@@ -222,9 +222,15 @@ get '/:page', OPTS_RE do
   @page = Page.new(params[:page])
   if @page.tracked?
     show(:show, @page.title)
-  else
-    @page = Page.new(File.join(params[:page], HOMEPAGE)) if File.directory?(@page.filename.strip_page_extension) # use index page if dir
-    redirect('/e/' + @page.basename)
+  else # try the page plus index
+    page_plus_index = Page.new(concat_homepage(params[:page]))
+    if page_plus_index.tracked?
+      @page = page_plus_index
+      show(:show, @page.title)
+    else # editing new page
+      @page = Page.new(File.join(params[:page], HOMEPAGE)) if File.directory?(@page.filename.strip_page_extension) # use index page if dir
+      redirect('/e/' + @page.basename)
+    end
   end
 end
 
@@ -255,3 +261,7 @@ private
     end
   end
 
+  def concat_homepage(name)
+    # concat the homepage to the name ex. foo becomes foo/index foo/ becomes foo/index
+    (name.ends_with?('/')) ? name+HOMEPAGE : name+'/'+HOMEPAGE
+  end
