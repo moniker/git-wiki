@@ -269,7 +269,13 @@ class Page
     return page, wiki_page_title
   end
 
-  def convert_markdown_to_html(markdown)
+  def strip_off_meta_info_page_prefix(markdown_with_meta)
+    return markdown_with_meta unless markdown_with_meta.starts_with?('---')
+    markdown_with_meta.split(/(^|\n)---\r?\n/, 3).last # split on the --- for a max of 3 and take the last
+  end
+
+  def convert_markdown_to_html(markdown_with_meta)
+    markdown = strip_off_meta_info_page_prefix(markdown_with_meta)
     wiki_linked(Maruku.new(escape_wiki_link(markdown)).to_html)
   end
 
