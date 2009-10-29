@@ -96,7 +96,6 @@ ul {
 .clearer { clear: both; }
 
 .content {
-  margin-left: 35%;
   padding: 10px 10px 2px 10px;
 }
 
@@ -167,6 +166,12 @@ ul {
         clear: left;
 }
 
+.page_title {
+  float: left;
+  font-size: 1.6em;
+  padding: 3px 10px 0 0;
+}
+
 .right { text-align: right; }
 
 .search_result { margin-bottom: 15px; }
@@ -184,7 +189,6 @@ ul {
 }
 
 .sub_nav {
-  float: left;
   padding-top: 8px;
 }
 
@@ -204,6 +208,14 @@ div.attach-options {
         color: #888;
 }
 /* ids */
+
+#attachments {
+  display: none;
+}
+
+#hideAttachments {
+  display: none;
+}
 
 #container {
  clear: both;

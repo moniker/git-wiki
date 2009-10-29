@@ -14,7 +14,7 @@
   });
 </script>
 
-<h1><%= @page.title %></h1>
+<div class="page_title"><%= @page.title %></div>
 
 <%= @env %>
 
@@ -35,13 +35,15 @@
     &bull; <a href="/h/<%= @page.basename %>/<%= @page.next_commit %>" class="nav_link">newer</a>
   <% end %>
 
-  <div class="sub_nav details">
+  <span class="sub_nav details">
     <script type="text/javascript">
       document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
     </script>
-    <br />
+
+    <!--
     <%= $repo.current_branch %> branch
-  </div>
+    --> 
+  </span>
 
 </div>
 

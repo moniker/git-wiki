@@ -1,4 +1,20 @@
-<h1>Editing <a href="/<%= @page.name %>"><%= @page.title %></a></h1>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#showAttachments").click(function(){
+      $("#attachments").toggle();
+      $("#showAttachments").toggle();
+      $("#hideAttachments").toggle();
+    });
+    $("#hideAttachments").click(function(){
+      $("#attachments").toggle();
+      $("#hideAttachments").toggle();
+      $("#showAttachments").toggle();
+    });
+  });
+</script>
+
+
+<div class="page_title">Editing <a href="/<%= @page.name %>"><%= @page.title %></a></div>
 
 <div class="sub_nav">
   <a href="/<%= @page.basename %>" class="nav_link">back</a>
@@ -11,11 +27,15 @@
   &bull; <a id="delete_link" href="#" class="nav_link">delete</a>
 
   <% if files = @page.attachments %>
-    <h3>Attachments</h3>
+    <span id="attachmentsLabel">
+      &bull; Attachments
+      <a id="showAttachments" class="nav_link" href="#">(show)</a>
+      <a id="hideAttachments" class="nav_link" href="#">(hide)</a>
+    </span>
     <div id="attachments">
     <% files.each do |file| %>
       <div class="attachment_item"><a href="<%= file.link_path %>"><%= file.name %></a>
-        <span class="detail">(<%= file.size %>)</span>
+        <span class="detail">(<%= file.size %>)</span> 
         <div class="attach-options">
           <a class="delete_attachment" href="<%= file.delete_path %>" aname="<%= file.name %>">delete</a>
           &bull; <a class="replace_attachment" href="<%= file.replace_path %>" aname="<%= file.name %>">replace</a>

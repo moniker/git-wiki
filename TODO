@@ -21,6 +21,8 @@
   * DONE markitup editor
   * DONE switch to maruku
   * DONE setup preview
+  * DONE widen edit view and page, make attachment section toggle
+  * DONE remove double click page to edit, did not work right 
   * Clean up page list eliminating non-markdown pages or at least removing edit and history links
 
 
