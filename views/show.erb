@@ -1,18 +1,3 @@
-<script type="text/javascript">
-  $(document).ready(function() {
-    $(".edit_area").editable('/eip/<%= @page.basename %>', {
-      indicator: "saving...",
-      tooltip: 'double-click to edit...',
-      cancel: 'cancel',
-      submit: 'save',
-      event: 'dblclick',
-      cssclass: 'edit',
-      loadurl: '/<%= @page.basename %>/raw',
-      type: 'textarea',
-      name: 'body'
-    });
-  });
-</script>
 
 <div class="page_title"><%= @page.title %></div>
 
