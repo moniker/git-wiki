@@ -2,7 +2,7 @@ require 'rubygems'
 require 'extensions'
 require 'page'
 
-%w(git maruku).each do |gem|
+%w(git kramdown).each do |gem|
   require_gem_with_feedback gem
 end
 

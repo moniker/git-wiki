@@ -276,7 +276,7 @@ class Page
 
   def convert_markdown_to_html(markdown_with_meta)
     markdown = strip_off_meta_info_page_prefix(markdown_with_meta)
-    wiki_linked(Maruku.new(escape_wiki_link(markdown)).to_html)
+    wiki_linked(Kramdown::Document.new(escape_wiki_link(markdown), {:coderay_line_numbers => nil}).to_html)
   end
 
 
