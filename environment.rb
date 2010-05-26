@@ -7,7 +7,7 @@ require 'page'
 end
 
 GIT_REPO = File.expand_path( ENV['WIKI_HOME'] || (ENV['HOME'] + '/wiki') )
-HOMEPAGE = 'index'
+HOMEPAGE = 'home'
 PAGE_FILE_EXT = ".markdown"
 ATTACH_DIR_SUFFIX = "_files"
 HTML_EXT = '.html'
